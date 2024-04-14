@@ -1,21 +1,30 @@
 import "./App.css";
 import Webcam from "react-webcam";
 import { useRef, useState } from "react";
+import { MdDownload } from "react-icons/md";
 function App() {
   const [displayphoto, setdisplayphoto] = useState([]);
   const cameraref = useRef(null);
-  const captureimage = (num) => {
-    // setdisplayphoto(cameraref.current.getScreenshot());
+  const captureimage = () => {
     const currentDate = new Date();
     const dateString = currentDate.toLocaleDateString();
     const timeString = currentDate.toLocaleTimeString();
     const dateTimeString = `${dateString} ${timeString}`;
     setdisplayphoto([
-      { photo: cameraref.current.getScreenshot(),currentDate:dateTimeString },
-      ...displayphoto
+      { photo: cameraref.current.getScreenshot(), currentDate: dateTimeString },
+      ...displayphoto,
     ]);
   };
-  console.log("jjjjjjjjjjjjjjjjjj", displayphoto);
+
+
+  const downloadImage = (imageData) => {
+    const link = document.createElement("a");
+    link.href = imageData.photo;
+    link.download = `photo_${imageData.currentDate.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <div className="App">
       <div className="container pt-5">
@@ -25,16 +34,20 @@ function App() {
               style={{
                 color: "#1fa661",
                 fontWeight: "700",
-                fontSize:'32px'
-                // textDecoration: "underline",
+                fontSize: "32px",
               }}
             >
-              {/* Camera App In React.js */}
-            Transform Moments into Memories Using React.js
+              Transform Moments into Memories Using React.js
             </h2>
           </div>
-          <div className="col-7" style={{ overflow: "hidden",backgroundColor:'#1fa661' }}>
-            <div class="card text-center shadow p-3 my-2 bg-body-tertiary" style={{borderRadius:'0px'}}>
+          <div
+            className="col-7"
+            style={{ overflow: "hidden", backgroundColor: "#1fa661" }}
+          >
+            <div
+              class="card text-center shadow p-3 my-2 bg-body-tertiary"
+              style={{ borderRadius: "0px" }}
+            >
               <div class="card-body">
                 <Webcam ref={cameraref} />{" "}
               </div>
@@ -64,7 +77,9 @@ function App() {
                       <path d="m15 13c0 1.6569-1.3431 3-3 3s-3-1.3431-3-3 1.3431-3 3-3 3 1.3431 3 3z"></path>
                     </g>
                   </svg>
-                  <span class="lable" style={{fontWeight:'500'}}>Take a Photo</span>
+                  <span class="lable" style={{ fontWeight: "500" }}>
+                    Take a Photo
+                  </span>
                 </button>
               </div>
             </div>
@@ -110,7 +125,7 @@ function App() {
                       style={{
                         paddingTop: "4px",
                         fontWeight: "500",
-                        fontSize:'18px',
+                        fontSize: "18px",
                         color: "#1fa661",
                       }}
                     >
@@ -120,17 +135,21 @@ function App() {
                       style={{
                         paddingTop: "0px",
                         fontWeight: "400",
-                        fontSize:'15px',
+                        fontSize: "15px",
                         color: "#868e97",
                       }}
                     >
                       {item.currentDate}
                     </h5>
+                    <button className="btn btn-success" onClick={() => downloadImage(item)}>
+                    <MdDownload color="#fff" size={19} />
+                    Download
+                  </button>
                   </div>
                 ))
               ) : (
                 <h3 style={{ textAlign: "center", color: "#1fa661" }}>
-                  Not Available
+                  Not Available 
                 </h3>
               )}
             </div>
